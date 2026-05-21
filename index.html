@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Dotty Homes — Residential Construction &amp; Remodeling</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+
+<style>
+  :root {
+    /* warm-neutral palette, leaning white — "chalk" tone */
+    --paper:       #fbfaf6;   /* page bg — near-white */
+    --bone:        #f1ede3;   /* card / inset */
+    --cream:       #e6dfce;   /* divider, hover */
+    --taupe:       #a89880;
+    --stone:       #57503f;
+    --ink:         #0e0c0a;   /* near black for max contrast */
+    --ink-soft:    #2a2520;
+
+    /* accent */
+    --accent:      #b8543b;   /* terracotta */
+    --accent-ink:  #f6f1e7;
+
+    --rule:        rgba(13, 11, 9, 0.18);
+    --rule-soft:   rgba(13, 11, 9, 0.10);
+
+    --serif: "Archivo", system-ui, sans-serif;
+    --sans:  "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+
+    --mw: 1320px;
+    --gutter: clamp(20px, 5vw, 56px);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html, body { margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  img { display: block; max-width: 100%; }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+
+  /* film grain overlay, very subtle */
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.16  0 0 0 0 0.14  0 0 0 0 0.12  0 0 0 0.05 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    opacity: 0.4;
+    mix-blend-mode: multiply;
+    transition: opacity .3s ease;
+  }
+  body.no-grain::before { opacity: 0; }
+
+  /* selection */
+  ::selection { background: var(--accent); color: var(--accent-ink); }
+
+  /* utilities */
+  .eyebrow {
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--stone);
+    font-weight: 500;
+  }
+  .rule { height: 1px; background: var(--rule); border: 0; }
+  .container {
+    max-width: var(--mw);
+    margin: 0 auto;
+    padding: 0 var(--gutter);
+  }
+  .h-display {
+    font-family: var(--serif);
+    font-weight: 800;
+    line-height: 0.94;
+    letter-spacing: -0.04em;
+    color: var(--ink);
+  }
+  .h-display em { font-style: normal; font-weight: 800; color: var(--accent); }
+
+  /* root */
+  #root { position: relative; z-index: 2; }
+</style>
+</head>
+<body>
+  <div id="root">
+
+    <!-- ===== MASTHEAD ===== -->
+    <header class="masthead">
+      <nav class="mh-nav" aria-label="Primary">
+        <a href="#work">Work</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <a href="#top" class="mh-mark" aria-label="Dotty Homes — home">
+        <span class="mh-word">Dotty</span>
+        <span class="mh-dot" aria-hidden="true"></span>
+        <span class="mh-word">Homes</span>
+      </a>
+    </header>
+
+    <!-- ===== HERO SLIDESHOW ===== -->
+    <section class="slideshow" id="top">
+      <div class="ss-stage" aria-label="Backyard pool with palms">
+        <div class="ss-slide is-in" aria-hidden="false">
+          <img src="photos/hero-1.jpg" alt="Backyard pool with palms" draggable="false" />
+        </div>
+        <div class="ss-slide" aria-hidden="true">
+          <img src="photos/hero-2.jpg" alt="Open white kitchen with island" draggable="false" />
+        </div>
+        <div class="ss-slide" aria-hidden="true">
+          <img src="photos/hero-3.jpg" alt="Remodeled living room" draggable="false" />
+        </div>
+        <div class="ss-slide" aria-hidden="true">
+          <img src="photos/hero-4.jpg" alt="Kitchen with island" draggable="false" />
+        </div>
+        <div class="ss-slide" aria-hidden="true">
+          <img src="photos/hero-5.jpg" alt="Dining area and kitchen" draggable="false" />
+        </div>
+        <div class="ss-slide" aria-hidden="true">
+          <img src="photos/hero-6.jpg" alt="Kitchen and dining area" draggable="false" />
+        </div>
+      </div>
+
+      <button class="ss-side ss-side-l" type="button" aria-label="Previous slide">
+        <svg viewBox="0 0 28 14" width="34" height="18" fill="none">
+          <path d="M27 7 H1 M8 1 L1 7 L8 13" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+        </svg>
+      </button>
+      <button class="ss-side ss-side-r" type="button" aria-label="Next slide">
+        <svg viewBox="0 0 28 14" width="34" height="18" fill="none">
+          <path d="M1 7 H27 M20 1 L27 7 L20 13" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+        </svg>
+      </button>
+    </section>
+
+    <!-- ===== WORK ===== -->
+    <section class="section work" id="work">
+      <div class="container work-head-row">
+        <span class="eyebrow">Selected Photography &nbsp; 2022 — 2026</span>
+        <h2 class="work-h">
+          Kitchens, baths, additions, and whole-home rebuilds — <em>drawn from the last four years.</em>
+        </h2>
+      </div>
+
+      <div class="photo-wall">
+        <div class="tile"><img src="photos/home-01.jpg" alt="Completed two-story home" /></div>
+        <div class="tile"><img src="photos/home-08.jpg" alt="Remodeled kitchen" /></div>
+        <div class="tile"><img src="photos/home-09.jpg" alt="Remodeled living room" /></div>
+        <div class="tile"><img src="photos/home-10.jpg" alt="Remodeled bedroom" /></div>
+        <div class="tile"><img src="photos/home-04.jpg" alt="Backyard with pool" /></div>
+        <div class="tile"><img src="photos/home-17.jpg" alt="Vaulted-ceiling living room" /></div>
+        <div class="tile"><img src="photos/home-02.jpg" alt="Two-story home, street view" /></div>
+        <div class="tile"><img src="photos/home-13.jpg" alt="Kitchen with island" /></div>
+        <div class="tile"><img src="photos/home-11.jpg" alt="Kitchen with custom wood cabinetry" /></div>
+        <div class="tile"><img src="photos/home-12.jpg" alt="Remodeled bedroom" /></div>
+        <div class="tile"><img src="photos/home-05.jpg" alt="Open-concept living and dining room" /></div>
+        <div class="tile"><img src="photos/home-14.jpg" alt="Dining room" /></div>
+        <div class="tile"><img src="photos/home-03.jpg" alt="Completed single-story home" /></div>
+        <div class="tile"><img src="photos/home-16.jpg" alt="Remodeled bathroom" /></div>
+        <div class="tile"><img src="photos/home-15.jpg" alt="Living room with fireplace" /></div>
+        <div class="tile"><img src="photos/home-07.jpg" alt="Remodeled kitchen with island" /></div>
+        <div class="tile"><img src="photos/home-06.jpg" alt="Open kitchen and living area" /></div>
+        <div class="tile"><img src="photos/home-18.jpg" alt="Dining area" /></div>
+      </div>
+    </section>
+
+    <!-- ===== ABOUT ===== -->
+    <section class="section about" id="about">
+      <div class="container">
+        <span class="eyebrow about-eyebrow">About</span>
+        <h2 class="about-h">
+          Dotty Homes builds and remodels homes across <em>Los Angeles</em> and <em>Orange County</em> &mdash; <em>for our neighbors</em>, mostly.
+        </h2>
+        <div class="about-copy">
+          <p>
+            We started Dotty the way most good shops start &mdash; one kitchen. The client told a neighbor, the neighbor told another, and somewhere along the way we became a construction company. Four years in, we still take on only what we can do well: a handful of projects at a time, with the same people you meet at the consultation on site every day until the walk&#8209;through.
+          </p>
+          <p>
+            We like good neighbors, honest budgets, and the kind of detail nobody photographs but everyone notices. We answer our own phones, show up when we say we will, and design every floorplan ourselves.
+          </p>
+        </div>
+
+        <div class="about-plan">
+          <span class="eyebrow">Design — in-house</span>
+          <figure class="about-plan-fig">
+            <img src="photos/floorplan.png" alt="Before-and-after floor plan of a recent Dotty Homes remodel" />
+            <figcaption>A recent remodel &mdash; the original layout, reimagined.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CONTACT ===== -->
+    <section class="contact-section" id="contact">
+      <div class="footer-inner">
+        <div class="footer-mark">
+          <span>Dotty</span>
+          <span class="dot" aria-hidden="true"></span>
+          <span>Homes</span>
+        </div>
+        <p class="footer-hi">Built happy &nbsp;&middot;&nbsp; Built well</p>
+        <div class="footer-cols">
+          <div class="footer-col">
+            <span class="k">Contact</span>
+            <a class="footer-v" href="tel:+16265039018">626 · 503 · 9018</a>
+            <a class="footer-v" href="mailto:hello@dottyhomes.com">hello@dottyhomes.com</a>
+          </div>
+          <div class="footer-col">
+            <span class="k">Service area</span>
+            <span class="footer-v">Los Angeles &amp;<br />Orange County</span>
+          </div>
+          <div class="footer-col">
+            <span class="k">Follow</span>
+            <a class="footer-v" href="#">Instagram</a>
+            <a class="footer-v" href="#">Xiaohongshu</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== LEGAL FOOTER ===== -->
+    <footer class="legal-footer">
+      <div class="footer-inner">
+        © <span id="year">2026</span> Dotty Homes &nbsp;&middot;&nbsp; CSLB #1137668 &nbsp;&middot;&nbsp; B General Building &nbsp;&middot;&nbsp; Fully insured
+      </div>
+    </footer>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
