@@ -264,7 +264,7 @@
 
 /* Mobile: 6-col grid */
 @media (max-width: 720px) {
-  .photo-wall { grid-template-columns: repeat(6, 1fr); gap: 6px; padding: 0 20px; }
+  .photo-wall { grid-template-columns: repeat(6, 1fr); gap: 6px; padding: clamp(44px, 11vw, 64px) 20px 0; }
   .tile:nth-child(6n + 1) { grid-column: span 6; aspect-ratio: 3 / 2; }
   .tile:nth-child(6n + 2) { grid-column: span 3; aspect-ratio: 3 / 4; }
   .tile:nth-child(6n + 3) { grid-column: span 3; aspect-ratio: 3 / 4; }
