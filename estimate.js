@@ -25,10 +25,15 @@
      verification turns itself on with no other change. */
   var TURNSTILE_SITEKEY = '';
 
-  /* Sources the print pieces use. Anything else is ignored so a stray
-     query string can't pollute which placement gets credit. The function
-     whitelists these again server-side. */
-  var VALID_SRC = ['flyer', 'banner', 'yard', 'door'];
+  /* Where the lead came from. Print placements first, then the on-site
+     service pages, so we can tell which page actually earns estimate
+     requests. Anything else is ignored so a stray query string can't
+     pollute which placement gets credit. The Edge Function whitelists
+     these again server-side — keep the two lists in sync. */
+  var VALID_SRC = [
+    'flyer', 'banner', 'yard', 'door',
+    'kitchen', 'bathroom', 'addition', 'wholehome', 'faq'
+  ];
   var SRC_KEY = 'dotty_src';
 
   var form = document.getElementById('estimateForm');

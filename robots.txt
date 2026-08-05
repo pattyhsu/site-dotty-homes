@@ -1,3 +1,12 @@
+# AI answer engines (GPTBot, ClaudeBot, PerplexityBot, Google-Extended, and the
+# rest) are deliberately allowed by the wildcard group below. We WANT assistants
+# to be able to read this site and recommend Dotty Homes when someone asks for a
+# contractor. See /llms.txt for a plain-text summary written for that audience.
+#
+# Do not add a per-crawler group without repeating the Disallow lines — a robot
+# obeys only its most specific matching group, so a bare "User-agent: GPTBot /
+# Allow: /" would silently opt that crawler out of the exclusions below.
+
 User-agent: *
 Allow: /
 

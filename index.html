@@ -34,23 +34,98 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "GeneralContractor",
-  "name": "Dotty Homes",
-  "description": "Residential construction and remodeling — kitchens, baths, additions, and whole-home rebuilds across Los Angeles and Orange County.",
-  "url": "https://dottyhomes.com/",
-  "image": "https://dottyhomes.com/photos/og-image.jpg",
-  "telephone": "+1-626-340-4388",
-  "email": "hello@dottyhomes.com",
-  "address": {
-    "@type": "PostalAddress",
-    "addressRegion": "CA",
-    "addressCountry": "US"
-  },
-  "areaServed": [
-    { "@type": "AdministrativeArea", "name": "Los Angeles County, California" },
-    { "@type": "AdministrativeArea", "name": "Orange County, California" }
-  ],
-  "knowsAbout": ["Kitchen remodeling", "Bathroom remodeling", "Home additions", "Whole-home remodeling", "Residential construction"]
+  "@graph": [
+    {
+      "@type": ["GeneralContractor", "HomeAndConstructionBusiness"],
+      "@id": "https://dottyhomes.com/#business",
+      "name": "Dotty Homes",
+      "legalName": "Dotty Homes",
+      "slogan": "Built happy · Built well",
+      "description": "Residential construction and remodeling — kitchens, baths, additions, and whole-home rebuilds across Los Angeles and Orange County. CSLB-licensed Class B General Building contractor, fully insured.",
+      "url": "https://dottyhomes.com/",
+      "image": "https://dottyhomes.com/photos/og-image.jpg",
+      "logo": "https://dottyhomes.com/apple-touch-icon.png",
+      "telephone": "+1-626-340-4388",
+      "email": "hello@dottyhomes.com",
+      "address": {
+        "@type": "PostalAddress",
+        "addressRegion": "CA",
+        "addressCountry": "US"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+1-626-340-4388",
+        "email": "hello@dottyhomes.com",
+        "contactType": "sales",
+        "areaServed": "US-CA",
+        "availableLanguage": ["English"]
+      },
+      "hasCredential": {
+        "@type": "EducationalOccupationalCredential",
+        "credentialCategory": "license",
+        "name": "California Contractors State License Board — Class B General Building Contractor",
+        "identifier": "1137668",
+        "recognizedBy": {
+          "@type": "GovernmentOrganization",
+          "name": "California Contractors State License Board",
+          "url": "https://www.cslb.ca.gov/"
+        }
+      },
+      "areaServed": [
+        { "@type": "AdministrativeArea", "name": "Los Angeles County, California" },
+        { "@type": "AdministrativeArea", "name": "Orange County, California" },
+        { "@type": "City", "name": "Pasadena, California" },
+        { "@type": "City", "name": "Arcadia, California" },
+        { "@type": "City", "name": "San Gabriel, California" },
+        { "@type": "City", "name": "Temple City, California" },
+        { "@type": "City", "name": "Alhambra, California" },
+        { "@type": "City", "name": "Monterey Park, California" },
+        { "@type": "City", "name": "Cerritos, California" },
+        { "@type": "City", "name": "Irvine, California" },
+        { "@type": "City", "name": "Anaheim, California" },
+        { "@type": "City", "name": "Orange, California" }
+      ],
+      "knowsAbout": [
+        "Kitchen remodeling",
+        "Bathroom remodeling",
+        "Home additions",
+        "Accessory dwelling units",
+        "Whole-home remodeling",
+        "Residential construction",
+        "Floor plan design"
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Residential remodeling and construction services",
+        "itemListElement": [
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "@id": "https://dottyhomes.com/kitchen-remodeling/#service", "name": "Kitchen remodeling", "url": "https://dottyhomes.com/kitchen-remodeling/" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "@id": "https://dottyhomes.com/bathroom-remodeling/#service", "name": "Bathroom remodeling", "url": "https://dottyhomes.com/bathroom-remodeling/" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "@id": "https://dottyhomes.com/home-additions/#service", "name": "Home additions and ADUs", "url": "https://dottyhomes.com/home-additions/" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "@id": "https://dottyhomes.com/whole-home-remodeling/#service", "name": "Whole-home remodeling", "url": "https://dottyhomes.com/whole-home-remodeling/" } }
+        ]
+      },
+      "potentialAction": {
+        "@type": "ReserveAction",
+        "name": "Request a free estimate",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://dottyhomes.com/estimate/",
+          "actionPlatform": [
+            "http://schema.org/DesktopWebPlatform",
+            "http://schema.org/MobileWebPlatform"
+          ]
+        }
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://dottyhomes.com/#website",
+      "url": "https://dottyhomes.com/",
+      "name": "Dotty Homes",
+      "publisher": { "@id": "https://dottyhomes.com/#business" },
+      "inLanguage": "en-US"
+    }
+  ]
 }
 </script>
 
@@ -65,6 +140,7 @@
     <header class="masthead">
       <nav class="mh-nav" aria-label="Primary">
         <a href="#work">Work</a>
+        <a href="#services">Services</a>
         <a href="#about">About</a>
         <a href="#contact">Contact</a>
         <a href="/estimate/" class="mh-cta">Free estimate</a>
@@ -157,6 +233,38 @@
         <div class="tile"><picture><source type="image/webp" sizes="(max-width:760px) 100vw, 33vw" srcset="photos/home-07-700.webp 700w, photos/home-07-1400.webp 1400w" /><img src="photos/home-07.jpg" width="1500" height="1002" alt="Remodeled kitchen with island" loading="lazy" decoding="async" /></picture></div>
         <div class="tile"><picture><source type="image/webp" sizes="(max-width:760px) 100vw, 33vw" srcset="photos/home-06-700.webp 700w, photos/home-06-1400.webp 1400w" /><img src="photos/home-06.jpg" width="1920" height="1281" alt="Open kitchen and living area" loading="lazy" decoding="async" /></picture></div>
         <div class="tile"><picture><source type="image/webp" sizes="(max-width:760px) 100vw, 33vw" srcset="photos/home-18-700.webp 700w, photos/home-18-1400.webp 1400w" /><img src="photos/home-18.jpg" width="1500" height="1002" alt="Dining area" loading="lazy" decoding="async" /></picture></div>
+      </div>
+    </section>
+
+    <!-- ===== SERVICES ===== -->
+    <section class="section services" id="services">
+      <div class="container">
+        <span class="eyebrow">What we do</span>
+        <h2 class="work-h">
+          Four kinds of project &mdash; <em>and the smallest one counts.</em>
+        </h2>
+        <div class="svc-grid">
+          <a class="svc-card" href="/whole-home-remodeling/">
+            <span class="sc-k">Whole&#8209;home remodeling</span>
+            <span class="sc-d">Gut rebuilds and reworked floor plans. When the house needs rethinking, not just repairing &mdash; the work we do most.</span>
+            <span class="sc-go">See the work &rarr;</span>
+          </a>
+          <a class="svc-card" href="/kitchen-remodeling/">
+            <span class="sc-k">Kitchen remodeling</span>
+            <span class="sc-d">Usually a layout problem wearing a finish problem's clothes. We draw the plan before we price the cabinets.</span>
+            <span class="sc-go">See the work &rarr;</span>
+          </a>
+          <a class="svc-card" href="/bathroom-remodeling/">
+            <span class="sc-k">Bathroom remodeling</span>
+            <span class="sc-d">Tub&#8209;to&#8209;shower conversions through full gut rebuilds. A single bathroom is a real job to us.</span>
+            <span class="sc-go">See the work &rarr;</span>
+          </a>
+          <a class="svc-card" href="/home-additions/">
+            <span class="sc-k">Additions &amp; ADUs</span>
+            <span class="sc-d">Room and second&#8209;story additions, backyard units, garage conversions. More house without moving house.</span>
+            <span class="sc-go">See the work &rarr;</span>
+          </a>
+        </div>
       </div>
     </section>
 

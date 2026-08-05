@@ -93,6 +93,11 @@
     padding-top: 22px;
   }
   .mh-nav { order: 1; padding-bottom: 8px; gap: 18px; font-size: 11px; letter-spacing: 0.18em; }
+  /* Five items (Services was added for the service pages) sit right at the
+     edge on a 390px phone. Wrap rather than overflow on anything narrower. */
+  @media (max-width: 400px) {
+    .mh-nav { flex-wrap: wrap; gap: 10px 14px; letter-spacing: 0.14em; }
+  }
   .mh-mark { order: 2; font-size: clamp(44px, calc((100vw - 40px) / 8.2), 84px); margin-bottom: -0.28em; justify-self: end; padding-right: 4px; }
 }
 
@@ -599,3 +604,54 @@ a.footer-v:hover { color: var(--accent); }
   .btn-primary { text-align: center; }
   .btn-ghost { text-align: center; border-bottom: 0; }
 }
+
+/* ===== SERVICES (homepage cards linking to the service pages) ===== */
+.services { border-top: 1px solid var(--rule-soft); }
+.svc-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  margin-top: clamp(32px, 4vw, 56px);
+  background: var(--rule-soft);
+  border-top: 1px solid var(--rule-soft);
+  border-bottom: 1px solid var(--rule-soft);
+}
+@media (min-width: 700px)  { .svc-grid { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1100px) { .svc-grid { grid-template-columns: repeat(4, 1fr); } }
+.svc-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: clamp(24px, 2.8vw, 34px) clamp(20px, 2.2vw, 28px);
+  background: var(--paper);
+  text-decoration: none;
+  transition: background .25s ease;
+}
+.svc-card:hover { background: var(--bone); }
+.sc-k {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: clamp(18px, 1.6vw, 22px);
+  line-height: 1.15;
+  letter-spacing: -0.018em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.sc-d {
+  font-family: var(--sans);
+  font-size: clamp(14px, 1.05vw, 15.5px);
+  line-height: 1.55;
+  color: var(--ink-soft);
+  flex: 1;
+  text-wrap: pretty;
+}
+.sc-go {
+  font-family: var(--sans);
+  font-size: 12.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--taupe);
+  margin-top: 4px;
+  transition: color .2s ease;
+}
+.svc-card:hover .sc-go { color: var(--accent); }
