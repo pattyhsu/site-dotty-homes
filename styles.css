@@ -131,6 +131,13 @@
   will-change: opacity, transform;
 }
 .ss-slide.is-in { opacity: 1; transform: scale(1); }
+/* <picture> is inline by default — it has to fill the slide/tile the same
+   way the bare <img> used to, or the srcset rewrite collapses the layout. */
+.ss-slide picture,
+.tile picture {
+  display: block;
+  width: 100%; height: 100%;
+}
 .ss-slide img {
   width: 100%; height: 100%;
   object-fit: cover;
