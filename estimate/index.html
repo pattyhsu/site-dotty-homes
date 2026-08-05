@@ -44,15 +44,19 @@
     <main class="est-wrap">
       <div class="est-grid">
 
-        <!-- ===== PITCH ===== -->
-        <div>
+        <!-- ===== INTRO (own grid child so the phone can slot the form
+                        between it and the rest of the pitch) ===== -->
+        <div class="est-intro">
           <span class="eyebrow">Free estimate &nbsp;&middot;&nbsp; No obligation</span>
           <h1 class="est-h">Thinking about a project? <em>Let's talk about it.</em></h1>
           <p class="est-lede">
             Tell us what you have in mind and we'll call you back — usually the same day. If it's
             a good fit we'll come out, measure, and put real numbers on paper.
           </p>
+        </div>
 
+        <!-- ===== PITCH ===== -->
+        <div class="est-col-pitch">
           <ul class="est-points">
             <li>No project too small &mdash; a single bathroom is a real job to us.</li>
             <li>We design the layout in-house, so the plan and the build are the same team.</li>
@@ -67,7 +71,7 @@
         </div>
 
         <!-- ===== FORM ===== -->
-        <div>
+        <div class="est-col-form">
           <section class="est-card" id="formCard">
             <span class="eyebrow">Request an estimate</span>
             <h2 class="est-card-h">Two things we actually need</h2>

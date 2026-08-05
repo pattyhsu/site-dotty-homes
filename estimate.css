@@ -54,8 +54,31 @@
   gap: clamp(36px, 5vw, 72px);
   align-items: start;
 }
+/* Desktop: intro and the rest of the pitch stack in the left column, form
+   holds the right. */
 @media (min-width: 900px) {
-  .est-grid { grid-template-columns: 1fr 1fr; }
+  .est-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "intro form"
+      "pitch form";
+    row-gap: 0;
+  }
+  .est-intro     { grid-area: intro; }
+  .est-col-pitch { grid-area: pitch; }
+  .est-col-form  { grid-area: form; }
+}
+
+/* Phone: headline, then the FORM, then the supporting pitch. Most of this
+   page's traffic arrives by scanning a QR off a flyer or a yard sign —
+   those people were already sold by the thing in their hand, and making
+   them scroll past four bullets and two photos to find the form is how you
+   lose them. The pitch still follows, for anyone who wants convincing. */
+@media (max-width: 899px) {
+  .est-intro     { order: 1; }
+  .est-col-form  { order: 2; }
+  .est-col-pitch { order: 3; }
+  .est-grid { gap: clamp(28px, 5vw, 44px); }
 }
 
 /* ===== PITCH (left) ===== */
