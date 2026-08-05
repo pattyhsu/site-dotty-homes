@@ -1,4 +1,10 @@
 User-agent: *
 Allow: /
 
+# QR landing stubs — they only redirect to /estimate/, and indexing them
+# would put a near-duplicate of that page in search results.
+Disallow: /go/
+# Print artwork and press PDFs. Not pages; nothing here is for a reader.
+Disallow: /print/
+
 Sitemap: https://dottyhomes.com/sitemap.xml

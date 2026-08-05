@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="robots" content="noindex" />
+<title>Dotty Homes — flyer (8.5×11)</title>
+<!--
+  ONE-PAGE FLYER — 8.5×11" trim, 8.75×11.25" with bleed.
+  Sits on the open-house counter and goes out in crew hands at job sites.
+  QR → /go/flyer/ → /estimate/?src=flyer.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="print.css" />
+<style>
+  @page { size: 8.75in 11.25in; }
+  .sheet { width: 8.75in; height: 11.25in; }
+
+  /* Full-bleed photo band across the top — absolute so it reaches all
+     three paper edges, with .safe starting just below it. */
+  .hero { position: absolute; top: 0; left: 0; right: 0; height: 3.6in; }
+
+  .top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-bottom: 0.22in;
+  }
+  .wordmark { font-size: 36pt; }
+  .wordmark .dot { width: 0.075in; height: 0.075in; margin: 0 0.055in; }
+  .top .tagline { font-size: 8.5pt; letter-spacing: 0.2em; }
+
+  .headline { font-size: 35pt; margin-top: 0.2in; }
+  .kicker {
+    font-family: var(--sans);
+    font-size: 12pt;
+    line-height: 1.45;
+    color: var(--ink);
+    margin-top: 0.14in;
+    max-width: 6.6in;
+  }
+  .kicker strong { font-weight: 600; }
+
+  .strip { display: flex; gap: 0.09in; margin-top: 0.2in; height: 1.35in; }
+  .strip > div { flex: 1; overflow: hidden; }
+
+  .reasons {
+    display: flex;
+    gap: 0.34in;
+    margin-top: 0.24in;
+    padding-top: 0.18in;
+    border-top: 1px solid rgba(13, 11, 9, 0.18);
+  }
+  .reasons div { flex: 1; }
+  .reasons .k {
+    font-family: var(--sans);
+    font-size: 8pt;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 0.05in;
+  }
+  .reasons .v { font-size: 10pt; line-height: 1.42; color: var(--ink); }
+
+  .scan {
+    margin-top: auto;
+    padding: 0.2in;
+    gap: 0.22in;
+  }
+  .scan img { width: 1.15in; height: 1.15in; }
+  .scan .say .lead { font-size: 19pt; }
+  .scan .say .sub { font-size: 10.5pt; margin-top: 0.07in; line-height: 1.4; }
+  .scan .phone { margin-left: auto; text-align: right; font-size: 23pt; }
+  .scan .phone small {
+    display: block;
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 8pt;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--stone);
+    margin-bottom: 0.05in;
+  }
+
+  .license {
+    font-size: 8pt;
+    letter-spacing: 0.05em;
+    text-align: center;
+    margin-top: 0.16in;
+  }
+</style>
+</head>
+<body>
+  <div class="sheet">
+    <div class="hero">
+      <img class="photo" src="../photos/hero-2.jpg" alt="" />
+    </div>
+
+    <div class="safe" style="top: 3.6in;">
+      <div class="top">
+        <div class="wordmark"><span>Dotty</span><span class="dot"></span><span>Homes</span></div>
+        <div class="tagline">Built happy &middot; Built well</div>
+      </div>
+
+      <h1 class="headline">Thinking about a project? <em>Let&rsquo;s talk about it.</em></h1>
+
+      <p class="kicker">
+        Kitchens, bathrooms, additions, whole-home rebuilds &mdash; and the small stuff too.
+        <strong>No project is too small.</strong> If you&rsquo;ve been putting something off because
+        it felt too minor to call a contractor about, that&rsquo;s exactly the call we want.
+      </p>
+
+      <div class="strip">
+        <div><img class="photo" src="../photos/home-11.jpg" alt="" /></div>
+        <div><img class="photo" src="../photos/home-16.jpg" alt="" /></div>
+        <div><img class="photo" src="../photos/home-05.jpg" alt="" /></div>
+      </div>
+
+      <div class="reasons">
+        <div>
+          <span class="k">Design in-house</span>
+          <p class="v">We draw the layout ourselves, so the plan and the crew that builds it are the same team.</p>
+        </div>
+        <div>
+          <span class="k">We pick up</span>
+          <p class="v">We answer our own phones and show up when we say we will. Four years of neighbors will tell you.</p>
+        </div>
+        <div>
+          <span class="k">Licensed &amp; insured</span>
+          <p class="v">CSLB&nbsp;#1137668, B General Building, fully insured. Los Angeles &amp; Orange County.</p>
+        </div>
+      </div>
+
+      <div class="scan">
+        <img src="qr/flyer.svg" alt="" />
+        <div class="say">
+          <span class="lead">Free estimate.</span>
+          <span class="sub">Scan the code &mdash; it takes about a minute,<br />and we&rsquo;ll call you back the same day.</span>
+        </div>
+        <div class="phone"><small>Or just call</small>626&thinsp;&middot;&thinsp;340&thinsp;&middot;&thinsp;4388</div>
+      </div>
+
+      <p class="license">
+        dottyhomes.com &nbsp;&middot;&nbsp; CSLB #1137668 &nbsp;&middot;&nbsp; B General Building &nbsp;&middot;&nbsp; Fully insured &nbsp;&middot;&nbsp; Los Angeles &amp; Orange County
+      </p>
+    </div>
+  </div>
+
+  <script>
+    if (location.search.indexOf('guides') !== -1) document.body.classList.add('guides');
+  </script>
+</body>
+</html>

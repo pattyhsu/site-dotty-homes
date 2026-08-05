@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="robots" content="noindex" />
+<title>Dotty Homes — door hanger (4.25×11)</title>
+<!--
+  DOOR HANGER — 4.25×11" trim, 4.5×11.25" with bleed.
+  Hung on ~50 doors around each active job site. Highest-intent audience
+  we have: they can see the work from their driveway.
+
+  DIE CUT: the top 2.2in is kept clear of anything that matters — a
+  standard hanger punches a ~1.25in hole about 1in down plus a slit to
+  the top edge. The dashed guide below is screen-only.
+
+  QR → /go/door/ → /estimate/?src=door.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="print.css" />
+<style>
+  @page { size: 4.5in 11.25in; }
+  .sheet { width: 4.5in; height: 11.25in; }
+
+  .safe { top: 2.2in; }
+
+  /* Die-cut keep-clear zone, screen-only. */
+  body.guides .diecut {
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 2.2in;
+    border-bottom: 1px dashed rgba(184, 84, 59, 0.7);
+  }
+  body.guides .diecut::after {
+    content: "";
+    position: absolute;
+    top: 0.6in; left: 50%;
+    width: 1.25in; height: 1.25in;
+    margin-left: -0.625in;
+    border: 1px dashed rgba(184, 84, 59, 0.7);
+    border-radius: 50%;
+  }
+  .diecut:not(.x) { }
+
+  .brandbar {
+    position: absolute;
+    top: 1.55in; left: 0; right: 0;
+    text-align: center;
+  }
+  .brandbar .wordmark { justify-content: center; font-size: 20pt; }
+  .brandbar .wordmark .dot { width: 0.05in; height: 0.05in; margin: 0 0.04in; }
+
+  .headline { font-size: 27pt; }
+  .kicker {
+    font-family: var(--sans);
+    font-size: 10.5pt;
+    line-height: 1.5;
+    margin-top: 0.14in;
+  }
+
+  .shot { height: 1.85in; margin-top: 0.2in; overflow: hidden; }
+
+  .scan {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+    padding: 0.2in 0.16in;
+    margin-top: 0.22in;
+  }
+  .scan img { width: 1.55in; height: 1.55in; margin: 0 auto 0.12in; }
+  .scan .say { align-items: center; }
+  .scan .say .lead { font-size: 16pt; }
+  .scan .say .sub { font-size: 9pt; margin-top: 0.05in; line-height: 1.4; }
+
+  .phone {
+    text-align: center;
+    font-size: 25pt;
+    margin-top: auto;
+    padding-top: 0.16in;
+  }
+  .phone small {
+    display: block;
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 7.5pt;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--stone);
+    margin-bottom: 0.05in;
+  }
+
+  .license {
+    font-size: 7pt;
+    letter-spacing: 0.04em;
+    text-align: center;
+    line-height: 1.5;
+    margin-top: 0.12in;
+  }
+</style>
+</head>
+<body>
+  <div class="sheet">
+    <div class="diecut"></div>
+
+    <div class="brandbar">
+      <div class="wordmark"><span>Dotty</span><span class="dot"></span><span>Homes</span></div>
+    </div>
+
+    <div class="safe">
+      <h1 class="headline">We&rsquo;re remodeling <em>your neighbor&rsquo;s</em> home.</h1>
+
+      <p class="kicker">
+        Our crew is on your street for the next few weeks. If there&rsquo;s something in your
+        house you&rsquo;ve been putting off &mdash; a bathroom, a kitchen, a wall you wish
+        weren&rsquo;t there &mdash; we&rsquo;ll come look at it for free while we&rsquo;re close by.
+      </p>
+
+      <div class="shot"><img class="photo" src="../photos/home-08.jpg" alt="" /></div>
+
+      <div class="scan">
+        <img src="qr/door.svg" alt="" />
+        <div class="say">
+          <span class="lead">Free estimate.</span>
+          <span class="sub">Scan it &mdash; takes about a minute.</span>
+        </div>
+      </div>
+
+      <div class="phone"><small>Or just call</small>626&thinsp;&middot;&thinsp;340&thinsp;&middot;&thinsp;4388</div>
+
+      <p class="license">
+        dottyhomes.com &middot; CSLB #1137668<br />
+        B General Building &middot; Fully insured
+      </p>
+    </div>
+  </div>
+
+  <script>
+    if (location.search.indexOf('guides') !== -1) document.body.classList.add('guides');
+  </script>
+</body>
+</html>

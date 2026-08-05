@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="robots" content="noindex" />
+<title>Dotty Homes — retractable banner (33×80)</title>
+<!--
+  RETRACTABLE BANNER — 33×80" trim, 33.25×80.25" with bleed.
+
+  Stands beside the door at every open house. Laid out for the two heights
+  a person actually reads it from:
+    4–15"   brand zone, above eye level — reads from across the room
+    13–43"  full-bleed photo, the thing that stops someone
+    45–73"  the ask — headline, QR, phone — at standing eye level
+    73–80"  left empty: that is knee height, and the retractor cassette
+            plus whoever is standing at the table eats it anyway
+
+  Zones are positioned absolutely rather than stacked in flow: the photo
+  has to bleed to both edges while the text stays inside the safe margin,
+  and at this size a flow-based guess puts the QR on top of the photo.
+
+  QR → /go/banner/ → /estimate/?src=banner.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="print.css" />
+<style>
+  @page { size: 33.25in 80.25in; }
+  .sheet { width: 33.25in; height: 80.25in; }
+
+  .zone {
+    position: absolute;
+    left: calc(var(--bleed) + var(--safe));
+    right: calc(var(--bleed) + var(--safe));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .zone-top    { top: 4in; }
+  .zone-bottom { top: 45in; bottom: 7in; }
+
+  .hero { position: absolute; top: 13in; left: 0; right: 0; height: 30in; }
+
+  .wordmark { font-size: 190pt; justify-content: center; }
+  .wordmark .dot { width: 0.5in; height: 0.5in; margin: 0 0.34in; }
+
+  .tagline { font-size: 30pt; letter-spacing: 0.32em; margin-top: 0.6in; }
+
+  .rule-accent {
+    width: 8in;
+    height: 0.07in;
+    background: var(--accent);
+    margin-top: 1.1in;
+  }
+
+  .headline { font-size: 112pt; }
+  .subline {
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 36pt;
+    line-height: 1.35;
+    margin-top: 0.7in;
+  }
+
+  .scan {
+    width: 100%;
+    padding: 0.9in;
+    gap: 0.9in;
+    text-align: left;
+    margin-top: 1.3in;
+  }
+  .scan img { width: 6.4in; height: 6.4in; }
+  .scan .say .lead { font-size: 80pt; }
+  .scan .say .sub { font-size: 29pt; margin-top: 0.26in; line-height: 1.35; }
+
+  .phone { font-size: 104pt; margin-top: 1in; }
+  .phone small {
+    display: block;
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 26pt;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--stone);
+    margin-bottom: 0.26in;
+  }
+
+  .license { font-size: 24pt; letter-spacing: 0.1em; margin-top: auto; }
+</style>
+</head>
+<body>
+  <div class="sheet">
+
+    <div class="zone zone-top">
+      <div class="wordmark"><span>Dotty</span><span class="dot"></span><span>Homes</span></div>
+      <div class="tagline">Built happy &middot; Built well</div>
+      <div class="rule-accent"></div>
+    </div>
+
+    <div class="hero"><img class="photo" src="../photos/hero-2.jpg" alt="" /></div>
+
+    <div class="zone zone-bottom">
+      <h1 class="headline">Thinking about a project?<br /><em>Let&rsquo;s talk about it.</em></h1>
+      <p class="subline">Kitchens &middot; Baths &middot; Additions &middot; Whole homes<br />No project too small.</p>
+
+      <div class="scan">
+        <img src="qr/banner.svg" alt="" />
+        <div class="say">
+          <span class="lead">Free estimate.</span>
+          <span class="sub">Scan the code and tell us what you&rsquo;re<br />thinking about. We&rsquo;ll call you back today.</span>
+        </div>
+      </div>
+
+      <div class="phone"><small>Or just call</small>626&thinsp;&middot;&thinsp;340&thinsp;&middot;&thinsp;4388</div>
+
+      <p class="license">dottyhomes.com &nbsp;&middot;&nbsp; CSLB #1137668 &nbsp;&middot;&nbsp; B General Building &nbsp;&middot;&nbsp; Fully insured</p>
+    </div>
+
+  </div>
+
+  <script>
+    if (location.search.indexOf('guides') !== -1) document.body.classList.add('guides');
+  </script>
+</body>
+</html>
