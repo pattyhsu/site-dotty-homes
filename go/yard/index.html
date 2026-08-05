@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!--
+  QR landing stub for the job-site yard sign.
+
+  Why this exists instead of pointing the QR straight at
+  /estimate/?src=yard: Cloudflare Web Analytics reports paths, not query
+  strings. Giving each printed piece its own path makes raw SCANS visible
+  per piece, not just the submissions — so a flyer that gets picked up but
+  never converts is distinguishable from one nobody touches.
+
+  The ?src= below is what actually reaches the leads table.
+-->
+<title>Dotty Homes — free estimate</title>
+<meta name="robots" content="noindex" />
+<link rel="canonical" href="https://dottyhomes.com/estimate/" />
+<meta http-equiv="refresh" content="0; url=/estimate/?src=yard" />
+<script>window.location.replace('/estimate/?src=yard');</script>
+</head>
+<body style="font-family:system-ui;padding:40px;text-align:center">
+  <p>Taking you to the estimate form&hellip;</p>
+  <p><a href="/estimate/?src=yard">Continue</a></p>
+</body>
+</html>

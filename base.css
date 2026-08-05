@@ -1,0 +1,108 @@
+/* =========================================================
+   Dotty Homes — design tokens, resets, and shared utilities
+   Extracted from index.html's inline <style> so /estimate/ can
+   share one source of truth for the brand instead of copying it.
+
+   LOAD ORDER MATTERS: link this AFTER styles.css. Both files define
+   .container and .eyebrow, and these values are the ones the live site
+   has always rendered (the block used to sit inline, below the
+   styles.css link). Swapping the order silently changes gutters and
+   letter-spacing across the whole site.
+   ========================================================= */
+
+:root {
+  /* warm-neutral palette, leaning white — "chalk" tone */
+  --paper:       #fbfaf6;   /* page bg — near-white */
+  --bone:        #f1ede3;   /* card / inset */
+  --cream:       #e6dfce;   /* divider, hover */
+  --taupe:       #a89880;
+  --stone:       #57503f;
+  --ink:         #0e0c0a;   /* near black for max contrast */
+  --ink-soft:    #2a2520;
+
+  /* accent */
+  --accent:      #b8543b;   /* terracotta */
+  --accent-ink:  #f6f1e7;
+
+  --rule:        rgba(13, 11, 9, 0.18);
+  --rule-soft:   rgba(13, 11, 9, 0.10);
+
+  --serif: "Archivo", system-ui, sans-serif;
+  --sans:  "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+
+  --mw: 1320px;
+  --gutter: clamp(20px, 5vw, 56px);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+
+/* film grain overlay, very subtle */
+body::before {
+  content: "";
+  position: fixed; inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.16  0 0 0 0 0.14  0 0 0 0 0.12  0 0 0 0.05 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  opacity: 0.4;
+  mix-blend-mode: multiply;
+  transition: opacity .3s ease;
+}
+body.no-grain::before { opacity: 0; }
+
+/* selection */
+::selection { background: var(--accent); color: var(--accent-ink); }
+
+/* utilities */
+.eyebrow {
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--stone);
+  font-weight: 500;
+}
+.rule { height: 1px; background: var(--rule); border: 0; }
+.container {
+  max-width: var(--mw);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+.h-display {
+  font-family: var(--serif);
+  font-weight: 800;
+  line-height: 0.94;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+}
+.h-display em { font-style: normal; font-weight: 800; color: var(--accent); }
+
+/* visually hidden — for screen readers and search engines */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* root */
+#root { position: relative; z-index: 2; }
