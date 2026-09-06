@@ -31,7 +31,7 @@
      pollute which placement gets credit. The Edge Function whitelists
      these again server-side — keep the two lists in sync. */
   var VALID_SRC = [
-    'flyer', 'banner', 'yard', 'door',
+    'flyer', 'banner', 'yard', 'door', 'nbr',
     'kitchen', 'bathroom', 'addition', 'wholehome', 'faq'
   ];
   var SRC_KEY = 'dotty_src';

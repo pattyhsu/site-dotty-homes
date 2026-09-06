@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="robots" content="noindex" />
+<title>Dotty Homes — neighborhood door hanger (4.25×11)</title>
+<!--
+  NEIGHBORHOOD DOOR HANGER — 4.25×11" trim, 4.5×11.25" with bleed.
+
+  Different job from door-hanger.html. That one is a cold pitch that
+  happens to mention the neighbors. This one leads with the open job
+  site: the crew is on the street right now, the address is printed,
+  and the ask is "come look" rather than "book an estimate." Someone who
+  walks over and watches the work for ten minutes is a warmer lead than
+  anyone a QR code produces, so the address gets the biggest block on
+  the card and the QR is the fallback.
+
+  PRINTED PER JOB. The address below changes every time. Edit the
+  JOB SITE block, run ./print/build.sh, print ~50.
+
+  DIE CUT: the top 2.2in is kept clear — a standard hanger punches a
+  ~1.25in hole about 1in down plus a slit to the top edge.
+
+  QR → /go/nbr/ → /estimate/?src=nbr, so scans from this piece are
+  countable separately from the other hanger.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="print.css" />
+<style>
+  @page { size: 4.5in 11.25in; }
+  .sheet { width: 4.5in; height: 11.25in; }
+
+  .safe { top: 2.2in; }
+
+  /* Die-cut keep-clear zone, screen-only. */
+  body.guides .diecut {
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 2.2in;
+    border-bottom: 1px dashed rgba(184, 84, 59, 0.7);
+  }
+  body.guides .diecut::after {
+    content: "";
+    position: absolute;
+    top: 0.6in; left: 50%;
+    width: 1.25in; height: 1.25in;
+    margin-left: -0.625in;
+    border: 1px dashed rgba(184, 84, 59, 0.7);
+    border-radius: 50%;
+  }
+
+  /* The wordmark rides in the flow BELOW the die cut, not floated up into
+     it — the hanger punch is a 1.25in hole roughly 1in down, which is
+     exactly where a top-anchored logo would sit, and the press would hand
+     back 50 cards with the brand name missing from the middle. */
+  .safe .wordmark {
+    justify-content: center;
+    font-size: 18pt;
+    margin-bottom: 0.13in;
+  }
+  .safe .wordmark .dot { width: 0.05in; height: 0.05in; margin: 0 0.04in; }
+
+  .eyebrow {
+    display: block;
+    text-align: center;
+    font-size: 7.5pt;
+    letter-spacing: 0.2em;
+    margin-bottom: 0.09in;
+  }
+
+  .headline { font-size: 25pt; text-align: center; }
+
+  /* ── The job site: the whole reason this piece exists ────────────── */
+  .site {
+    background: var(--ink);
+    color: var(--paper);
+    text-align: center;
+    padding: 0.17in 0.14in 0.19in;
+    margin-top: 0.17in;
+  }
+  .site .come {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 8pt;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .site .addr {
+    font-family: var(--serif);
+    font-weight: 800;
+    font-size: 16.5pt;
+    letter-spacing: -0.02em;
+    line-height: 1.06;
+    margin-top: 0.07in;
+    text-wrap: balance;
+  }
+  .site .when {
+    font-family: var(--sans);
+    font-size: 8.5pt;
+    line-height: 1.45;
+    margin-top: 0.08in;
+    color: #cfc7b6;
+  }
+
+  .shot { height: 1.15in; margin-top: 0.15in; overflow: hidden; }
+
+  /* ── The ask ─────────────────────────────────────────────────────── */
+  .ask {
+    font-family: var(--serif);
+    font-weight: 800;
+    font-size: 15pt;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    text-align: center;
+    margin-top: 0.19in;
+    text-wrap: balance;
+  }
+  .ask em { font-style: normal; color: var(--accent); }
+  .ask-sub {
+    font-family: var(--sans);
+    font-size: 9pt;
+    line-height: 1.45;
+    color: var(--stone);
+    text-align: center;
+    margin-top: 0.08in;
+  }
+
+  /* ── The other door: selling ─────────────────────────────────────── */
+  .also {
+    margin-top: 0.16in;
+    padding-top: 0.13in;
+    border-top: 1px solid rgba(87, 80, 63, 0.28);
+    font-family: var(--sans);
+    font-size: 8.5pt;
+    line-height: 1.45;
+    color: var(--stone);
+    text-align: center;
+  }
+  .also strong { color: var(--ink); font-weight: 600; }
+
+  .scan {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+    padding: 0.16in 0.14in;
+    margin-top: 0.16in;
+  }
+  .scan img { width: 1.3in; height: 1.3in; margin: 0 auto 0.09in; }
+  .scan .say { align-items: center; }
+  .scan .say .lead { font-size: 14pt; }
+  .scan .say .sub { font-size: 8.5pt; margin-top: 0.04in; line-height: 1.4; }
+
+  .phone {
+    text-align: center;
+    font-size: 23pt;
+    margin-top: auto;
+    padding-top: 0.14in;
+  }
+  .phone small {
+    display: block;
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 7.5pt;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--stone);
+    margin-bottom: 0.04in;
+  }
+
+  .license {
+    font-size: 6.5pt;
+    letter-spacing: 0.03em;
+    text-align: center;
+    line-height: 1.5;
+    margin-top: 0.1in;
+  }
+</style>
+</head>
+<body>
+  <div class="sheet">
+    <div class="diecut"></div>
+
+    <div class="safe">
+      <div class="wordmark"><span>Dotty</span><span class="dot"></span><span>Homes</span></div>
+
+      <span class="eyebrow">Right now, on your street</span>
+      <h1 class="headline">We&rsquo;re working in <em>your neighborhood.</em></h1>
+
+      <!-- ═══════════════════════════════════════════════════════════════
+           JOB SITE — EDIT THESE THREE LINES FOR EVERY PRINT RUN,
+           then run ./print/build.sh. While the placeholder address below
+           is still here the build SKIPS this piece and says so, so a
+           stack of hangers can't go out pointing at nowhere.
+           ═══════════════════════════════════════════════════════════ -->
+      <div class="site">
+        <div class="come">Come see it</div>
+        <div class="addr" id="jobAddress">0000 EXAMPLE ST<br />La&nbsp;Palma</div>
+        <div class="when">Weekdays 8&ndash;4 while we&rsquo;re here.<br />Walk up and ask for anyone in a Dotty shirt.</div>
+      </div>
+      <!-- ═══════════════════ end JOB SITE ══════════════════════════ -->
+
+      <div class="shot"><img class="photo" src="../photos/home-08.jpg" alt="" /></div>
+
+      <p class="ask">Anything at <em>your</em> place you&rsquo;ve been meaning to change?</p>
+      <p class="ask-sub">
+        A kitchen that&rsquo;s closed off. A bathroom you avoid. A wall you wish
+        weren&rsquo;t there. While we&rsquo;re on your street, we&rsquo;ll look at it
+        for free.
+      </p>
+
+      <p class="also">
+        <strong>Thinking of selling instead?</strong> We work on that side of the
+        street too &mdash; tell us and we&rsquo;ll walk it with you before you list.
+      </p>
+
+      <div class="scan">
+        <img src="qr/nbr.svg" alt="" />
+        <div class="say">
+          <span class="lead">Free estimate.</span>
+          <span class="sub">Scan it &mdash; takes about a minute.</span>
+        </div>
+      </div>
+
+      <div class="phone"><small>Or just call</small>626&thinsp;&middot;&thinsp;340&thinsp;&middot;&thinsp;4388</div>
+
+      <p class="license">
+        dottyhomes.com &middot; CSLB #1137668<br />
+        B General Building &middot; Fully insured
+      </p>
+    </div>
+  </div>
+
+  <script>
+    if (location.search.indexOf('guides') !== -1) document.body.classList.add('guides');
+  </script>
+</body>
+</html>

@@ -12,6 +12,7 @@
 #
 #   flyer         8.5 × 11   in    (PDF 8.75 × 11.25)
 #   door-hanger   4.25 × 11  in    (PDF 4.5 × 11.25)   die-cut hole at top
+#   neighbor-hanger 4.25 × 11 in   (PDF 4.5 × 11.25)   die-cut, per-job address
 #   yard-sign     18 × 24    in    (PDF 18.25 × 24.25) 2-sided, coroplast
 #   banner        33 × 80    in    (PDF 33.25 × 80.25) retractable
 #
@@ -27,6 +28,19 @@ OUT="print/pdf"
 [ -x "$CHROME" ] || { echo "Chrome not found at: $CHROME" >&2; exit 1; }
 mkdir -p "$OUT"
 
+PIECES=(flyer door-hanger yard-sign banner)
+
+# The neighborhood hanger prints a specific job-site address, so it is built
+# per job rather than kept as a standing PDF — and a stack of 50 that says
+# 0000 EXAMPLE ST is 50 wasted cards plus a second trip to the shop. Skip it
+# while the placeholder is still there, but never block the other four: those
+# don't change per job and you should be able to rebuild them any time.
+if grep -q '0000 EXAMPLE ST' print/neighbor-hanger.html; then
+  SKIPPED_NEIGHBOR=1
+else
+  PIECES+=(neighbor-hanger)
+fi
+
 python3 -m http.server "$PORT" >/dev/null 2>&1 &
 SERVER_PID=$!
 trap 'kill $SERVER_PID 2>/dev/null || true' EXIT
@@ -37,7 +51,7 @@ for _ in $(seq 1 40); do
   sleep 0.25
 done
 
-for piece in flyer door-hanger yard-sign banner; do
+for piece in "${PIECES[@]}"; do
   # --virtual-time-budget gives webfonts and photos time to land; without it
   # Chrome can snapshot the page mid-load and you get Helvetica.
   "$CHROME" --headless --disable-gpu --no-pdf-header-footer \
@@ -56,3 +70,13 @@ done
 
 echo
 echo "PDFs in $OUT/ — sizes above include bleed."
+
+if [ "${SKIPPED_NEIGHBOR:-}" = 1 ]; then
+  cat >&2 <<'MSG'
+
+SKIPPED neighbor-hanger — it still says 0000 EXAMPLE ST.
+  Edit the JOB SITE block in print/neighbor-hanger.html (street, city,
+  and the hours the crew is actually on site), then run this again.
+  That piece is printed fresh for each job on purpose.
+MSG
+fi
