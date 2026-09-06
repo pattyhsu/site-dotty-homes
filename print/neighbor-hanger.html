@@ -73,11 +73,12 @@
 
   /* ── The job site: the whole reason this piece exists ────────────── */
   .site {
+    flex: none;
     background: var(--ink);
     color: var(--paper);
     text-align: center;
-    padding: 0.17in 0.14in 0.19in;
-    margin-top: 0.17in;
+    padding: 0.20in 0.14in 0.22in;
+    margin-top: 0.20in;
   }
   .site .come {
     font-family: var(--sans);
@@ -104,17 +105,16 @@
     color: #cfc7b6;
   }
 
-  .shot { height: 1.15in; margin-top: 0.15in; overflow: hidden; }
-
   /* ── The ask ─────────────────────────────────────────────────────── */
   .ask {
+    flex: none;
     font-family: var(--serif);
     font-weight: 800;
     font-size: 15pt;
     letter-spacing: -0.03em;
     line-height: 1.05;
     text-align: center;
-    margin-top: 0.19in;
+    margin-top: 0.24in;
     text-wrap: balance;
   }
   .ask em { font-style: normal; color: var(--accent); }
@@ -129,7 +129,7 @@
 
   /* ── The other door: selling ─────────────────────────────────────── */
   .also {
-    margin-top: 0.16in;
+    margin-top: 0.18in;
     padding-top: 0.13in;
     border-top: 1px solid rgba(87, 80, 63, 0.28);
     font-family: var(--sans);
@@ -141,13 +141,14 @@
   .also strong { color: var(--ink); font-weight: 600; }
 
   .scan {
+    flex: none;
     flex-direction: column;
     align-items: stretch;
     text-align: center;
-    padding: 0.16in 0.14in;
-    margin-top: 0.16in;
+    padding: 0.18in 0.14in;
+    margin-top: 0.22in;
   }
-  .scan img { width: 1.3in; height: 1.3in; margin: 0 auto 0.09in; }
+  .scan img { width: 1.45in; height: 1.45in; margin: 0 auto 0.1in; }
   .scan .say { align-items: center; }
   .scan .say .lead { font-size: 14pt; }
   .scan .say .sub { font-size: 8.5pt; margin-top: 0.04in; line-height: 1.4; }
@@ -156,7 +157,7 @@
     text-align: center;
     font-size: 23pt;
     margin-top: auto;
-    padding-top: 0.14in;
+    padding-top: 0.16in;
   }
   .phone small {
     display: block;
@@ -173,8 +174,8 @@
     font-size: 6.5pt;
     letter-spacing: 0.03em;
     text-align: center;
-    line-height: 1.5;
-    margin-top: 0.1in;
+    line-height: 1.45;
+    margin-top: 0.09in;
   }
 </style>
 </head>
@@ -201,8 +202,6 @@
       </div>
       <!-- ═══════════════════ end JOB SITE ══════════════════════════ -->
 
-      <div class="shot"><img class="photo" src="../photos/home-08.jpg" alt="" /></div>
-
       <p class="ask">Anything at <em>your</em> place you&rsquo;ve been meaning to change?</p>
       <p class="ask-sub">
         A kitchen that&rsquo;s closed off. A bathroom you avoid. A wall you wish
@@ -225,15 +224,50 @@
 
       <div class="phone"><small>Or just call</small>626&thinsp;&middot;&thinsp;340&thinsp;&middot;&thinsp;4388</div>
 
+      <!-- Two businesses, two licenses, and this card advertises both. Each
+           line names the entity that actually holds the license it cites:
+           the remodeling work is Dotty Homes (CSLB), the listing work is
+           Dotty Homeservices, Inc. (DRE). Naming the licensee is the point —
+           a bare number under the wrong brand is what B&P §10140.6 is about.
+           If either license number changes, it changes here. -->
       <p class="license">
-        dottyhomes.com &middot; CSLB #1137668<br />
-        B General Building &middot; Fully insured
+        dottyhomes.com<br />
+        Remodeling by Dotty Homes &middot; CSLB #1137668 &middot; B General Building &middot; Insured<br />
+        Real estate by Dotty Homeservices, Inc. &middot; CA DRE #02431285
       </p>
     </div>
   </div>
 
   <script>
     if (location.search.indexOf('guides') !== -1) document.body.classList.add('guides');
+
+    /* The job-site address changes for every print run and nobody knows how
+       long the next one is. Every block on this card is flex: none precisely
+       so that a long address OVERFLOWS visibly instead of quietly squashing
+       whatever sits above it — but an overflow you only notice after the
+       cards are cut is no better. So the page measures itself and publishes
+       the verdict on <html>; build.sh reads it out of the rendered DOM and
+       refuses to produce a PDF that has already lost its layout. */
+    (function () {
+      function check() {
+        var safe = document.querySelector('.safe');
+        var kids = safe.children;
+        var last = kids[kids.length - 1].getBoundingClientRect();
+        var over = last.bottom - safe.getBoundingClientRect().bottom;
+        // A shade of tolerance for sub-pixel rounding; anything more is real.
+        document.documentElement.setAttribute(
+          'data-fits', over > 1 ? 'no' : 'yes');
+        document.documentElement.setAttribute(
+          'data-overflow-px', String(Math.round(over)));
+      }
+      if (document.fonts && document.fonts.ready) {
+        // Measure only once the real faces have landed — Archivo is wider
+        // than the fallback, so measuring early reports a card that fits.
+        document.fonts.ready.then(check);
+      } else {
+        window.addEventListener('load', check);
+      }
+    }());
   </script>
 </body>
 </html>

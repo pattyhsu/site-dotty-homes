@@ -66,6 +66,33 @@ print(f'{(b[2]-b[0])/72:g} x {(b[3]-b[1])/72:g} in')
 PY
 )
   printf '%-14s %s  (%s)\n' "$piece" "$size" "$(du -h "$OUT/$piece.pdf" | cut -f1)"
+
+  # The neighborhood hanger carries a per-job address and nobody knows how long
+  # the next one runs. The page measures itself after the webfonts land and
+  # publishes the verdict on <html data-fits>; read it back out of the rendered
+  # DOM rather than trusting the PDF to look right. A card that has already
+  # overflowed its safe area must not reach the print shop.
+  if [ "$piece" = neighbor-hanger ]; then
+    dom=$("$CHROME" --headless --disable-gpu --virtual-time-budget=10000 \
+      --dump-dom "http://localhost:$PORT/print/$piece.html" 2>/dev/null || true)
+    case "$dom" in
+      *'data-fits="no"'*)
+        over=$(printf '%s' "$dom" | sed -n 's/.*data-overflow-px="\([0-9-]*\)".*/\1/p' | head -1)
+        rm -f "$OUT/$piece.pdf"
+        cat >&2 <<MSG
+
+neighbor-hanger OVERFLOWS its safe area by ${over:-?}px — PDF deleted, not shipped.
+  The job-site address is too long for the card. Shorten it (drop the street
+  suffix, or the city if the street already says it), then run this again.
+MSG
+        exit 1
+        ;;
+      *'data-fits="yes"'*) : ;;   # measured and fits
+      *)
+        echo "warning: could not read the fit check from $piece — inspect the PDF by hand." >&2
+        ;;
+    esac
+  fi
 done
 
 echo
