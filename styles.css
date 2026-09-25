@@ -55,8 +55,12 @@
   font-family: var(--serif);
   font-weight: 800;
   font-style: normal;
-  /* Archivo 800 uppercase — ~7.9em at this weight */
-  font-size: clamp(38px, calc((100vw - 460px) / 8.2), 96px);
+  /* Archivo 800 uppercase — the mark is ~7.5em wide at this weight. It has
+     to fit the 1fr column beside the nav (padding, gap and nav width all
+     grow with the viewport), or it spills past the right edge and the page
+     scrolls sideways. This line stays inside that column from 721px up and
+     reaches the 96px cap around 1372px. */
+  font-size: clamp(28px, calc((100vw - 450px) / 9.6), 96px);
   line-height: 0.84;
   letter-spacing: -0.04em;
   text-transform: uppercase;
@@ -99,6 +103,11 @@
     .mh-nav { flex-wrap: wrap; gap: 10px 14px; letter-spacing: 0.14em; }
   }
   .mh-mark { order: 2; font-size: clamp(44px, calc((100vw - 40px) / 8.2), 84px); margin-bottom: -0.28em; justify-self: end; padding-right: 4px; }
+  /* The 44px floor is 334px of wordmark, just fitting a 375px phone. Below
+     that, size it to the screen instead of forcing a sideways scroll. */
+  @media (max-width: 374px) {
+    .mh-mark { font-size: calc((100vw - 48px) / 7.6); }
+  }
 }
 
 /* ===== MINI BAR =====
