@@ -470,11 +470,14 @@ a.v:hover { color: var(--accent); }
 
 .footer-cols {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(28px, 4vw, 64px);
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(28px, 4vw, 56px);
   align-items: start;
-  max-width: 880px;
+  max-width: 1120px;
   margin: 0 auto;
+}
+@media (max-width: 980px) {
+  .footer-cols { grid-template-columns: repeat(2, 1fr); max-width: 640px; }
 }
 @media (max-width: 720px) {
   .footer-cols { grid-template-columns: 1fr; gap: 32px; max-width: 360px; }
