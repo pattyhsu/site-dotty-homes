@@ -68,6 +68,19 @@
     schedule();
   }
 
+  /* ===== MINI BAR — appears once the masthead has scrolled out of view ===== */
+  var masthead = document.querySelector(".masthead");
+  var miniBar = document.querySelector(".mini-bar");
+  if (masthead && miniBar && "IntersectionObserver" in window) {
+    new IntersectionObserver(function (entries) {
+      var gone = !entries[0].isIntersecting;
+      miniBar.classList.toggle("is-on", gone);
+      miniBar.setAttribute("aria-hidden", gone ? "false" : "true");
+      if (gone) miniBar.removeAttribute("inert");
+      else miniBar.setAttribute("inert", "");
+    }).observe(masthead);
+  }
+
   /* ===== SCROLL REVEAL — photo-wall tiles ===== */
   var tiles = Array.prototype.slice.call(document.querySelectorAll(".tile"));
   if (tiles.length) {

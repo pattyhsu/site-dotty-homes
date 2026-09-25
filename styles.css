@@ -101,6 +101,75 @@
   .mh-mark { order: 2; font-size: clamp(44px, calc((100vw - 40px) / 8.2), 84px); margin-bottom: -0.28em; justify-self: end; padding-right: 4px; }
 }
 
+/* ===== MINI BAR =====
+   The masthead's big wordmark is the first impression, so it scrolls away as
+   before. Once it's gone, this slim bar slides down so the menu and the
+   Free estimate button stay one tap away. Shown/hidden by app.js. */
+.mini-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 50;
+  background: rgba(251, 250, 246, 0.9);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--rule-soft);
+  transform: translateY(-100%);
+  transition: transform .35s cubic-bezier(.2,.8,.2,1);
+}
+.mini-bar.is-on { transform: none; }
+.mini-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  height: 60px;
+}
+.mini-mark {
+  display: inline-flex;
+  align-items: baseline;
+  font-family: var(--serif);
+  font-weight: 800;
+  font-size: 20px;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.mini-mark:hover { color: var(--accent); }
+.mini-dot {
+  display: inline-block;
+  width: 0.15em; height: 0.15em;
+  border-radius: 50%;
+  background: var(--accent);
+  margin: 0 0.1em;
+  transform: translateY(-0.275em);
+}
+.mini-nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 2.4vw, 32px);
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--ink);
+}
+.mini-nav a { white-space: nowrap; padding: 6px 0; }
+.mini-nav a:hover { color: var(--accent); }
+.mini-cta { color: var(--accent); font-weight: 600; border-bottom: 1px solid var(--accent); }
+@media (max-width: 720px) {
+  .mini-nav a:not(.mini-cta) { display: none; }
+  .mini-nav { font-size: 11px; letter-spacing: 0.14em; }
+  .mini-mark { font-size: 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mini-bar { transition: none; }
+}
+/* Menu jumps land below the bar, not under it. */
+html { scroll-padding-top: 72px; }
+
 /* ===== HERO SLIDESHOW (photo only — no overlay text) ===== */
 .slideshow {
   position: relative;
