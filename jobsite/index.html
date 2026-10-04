@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Dotty Photos">
 <!--
-  Crew photo upload. One link per build; the deal is identified by the token
+  Crew photo and video upload. One link per build; the deal is identified by the token
   in the URL, so a photo can never be filed against the wrong house.
 
   Lives here rather than in the Edge Function because Supabase rewrites any
@@ -51,13 +51,13 @@
 </head>
 <body>
   <h1 id="label">…</h1>
-  <p class="sub">Daily progress photos · Fotos del progreso</p>
+  <p class="sub">Daily photos &amp; video · Fotos y video del progreso</p>
 
   <label class="pick" id="pick" aria-disabled="true">
     <span class="cam">📷</span>
-    <span>Take or choose photos</span>
-    <span class="es">Tomar o elegir fotos</span>
-    <input id="f" type="file" accept="image/*" multiple capture="environment">
+    <span>Take photos or video</span>
+    <span class="es">Tomar fotos o video</span>
+    <input id="f" type="file" accept="image/*,video/*" multiple capture="environment">
   </label>
 
   <ul id="list"></ul>
@@ -70,6 +70,11 @@
 <script>
 (function () {
   var API = 'https://pwrnywsojomrygsiezzi.supabase.co/functions/v1/progress-photo';
+  // Mirrors MAX_BYTES in the progress-photo function. That 50 MB is not a
+  // preference — the function buffers the body twice, and a 100 MB body kills
+  // the worker outright (measured 2026-10-04). Keep the two in step.
+  var MAX_BYTES = 50 * 1024 * 1024;
+  var TOO_BIG = 'too long · más corto';
   var T = new URLSearchParams(location.search).get('t') || '';
   var pick = document.getElementById('pick');
   var list = document.getElementById('list');
@@ -110,8 +115,20 @@
       var name = document.createElement('span');
       var state = document.createElement('span');
       name.textContent = file.name.slice(0, 26);
-      state.textContent = 'sending…';
+      // A 30 MB clip is minutes on a job-site uplink. Saying so is the
+      // difference between waiting and assuming it has hung.
+      state.textContent = file.type.indexOf('video') === 0 ? 'sending video…' : 'sending…';
       li.appendChild(name); li.appendChild(state); list.appendChild(li);
+
+      // Checked here as well as on the server, because the point is to NOT
+      // spend two minutes of a job-site uplink on an upload that cannot
+      // succeed. The server stays the authority; this only skips the wait.
+      if (file.size > MAX_BYTES) {
+        state.textContent = TOO_BIG;
+        state.className = 'bad';
+        next();
+        return;
+      }
 
       var fd = new FormData();
       fd.append('photo', file);
@@ -119,8 +136,14 @@
         .then(function (r) { return r.ok ? r.json() : Promise.reject(r); })
         .then(function () { state.textContent = '✓'; state.className = 'ok'; sent++; })
         // No automatic retry: on bad signal a silent retry that half-works is
-        // worse than a red line the person can see and tap again.
-        .catch(function () { state.textContent = 'failed — try again'; state.className = 'bad'; })
+        // worse than a red line the person can see and tap again. But "try
+        // again" is the wrong advice for a size rejection — the same file will
+        // fail the same way forever — so 413 gets its own message.
+        .catch(function (r) {
+          var tooBig = r && r.status === 413;
+          state.textContent = tooBig ? TOO_BIG : 'failed — try again';
+          state.className = 'bad';
+        })
         .then(next);
     })();
   });
