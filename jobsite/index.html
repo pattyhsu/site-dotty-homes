@@ -79,12 +79,30 @@
 <script>
 (function () {
   var API = 'https://pwrnywsojomrygsiezzi.supabase.co/functions/v1/progress-photo';
-  // Mirrors MAX_BYTES in the progress-photo function. That 50 MB is not a
-  // preference — the function buffers the body twice, and a 100 MB body kills
-  // the worker outright (measured 2026-10-04). Keep the two in step.
-  var MAX_BYTES = 50 * 1024 * 1024;
+  // Mirrors MAX_BYTES in the progress-photo function. A sanity bound, not a
+  // technical ceiling: the bytes go straight to storage now, so nothing here
+  // buffers them. Keep the two in step.
+  var MAX_BYTES = 1024 * 1024 * 1024;
   var TOO_BIG = 'too long · más corto';
   var T = new URLSearchParams(location.search).get('t') || '';
+
+  // Every call to our function is JSON. It only ever signs a URL and records a
+  // row — it never carries a file.
+  function api(payload) {
+    return fetch(API + '?t=' + encodeURIComponent(T), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    }).then(function (r) {
+      if (r.ok) return r.json();
+      // Carry the status through so the caller can tell "too large" apart
+      // from "try again" — they need opposite advice.
+      var e = new Error('http ' + r.status);
+      e.status = r.status;
+      throw e;
+    });
+  }
+
   var pick = document.getElementById('pick');
   var list = document.getElementById('list');
   var done = document.getElementById('done');
@@ -130,8 +148,8 @@
       li.appendChild(name); li.appendChild(state); list.appendChild(li);
 
       // Checked here as well as on the server, because the point is to NOT
-      // spend two minutes of a job-site uplink on an upload that cannot
-      // succeed. The server stays the authority; this only skips the wait.
+      // spend a job-site uplink on an upload that cannot succeed. The server
+      // stays the authority; this only skips the wait.
       if (file.size > MAX_BYTES) {
         state.textContent = TOO_BIG;
         state.className = 'bad';
@@ -139,20 +157,50 @@
         return;
       }
 
-      var fd = new FormData();
-      fd.append('photo', file);
-      fetch(API + '?t=' + encodeURIComponent(T), { method: 'POST', body: fd })
-        .then(function (r) { return r.ok ? r.json() : Promise.reject(r); })
-        .then(function () { state.textContent = '✓'; state.className = 'ok'; sent++; })
-        // No automatic retry: on bad signal a silent retry that half-works is
-        // worse than a red line the person can see and tap again. But "try
-        // again" is the wrong advice for a size rejection — the same file will
-        // fail the same way forever — so 413 gets its own message.
-        .catch(function (r) {
-          var tooBig = r && r.status === 413;
-          state.textContent = tooBig ? TOO_BIG : 'failed — try again';
-          state.className = 'bad';
+      // Three steps, and the bytes never touch our function: ask it to sign a
+      // one-object URL, PUT straight to storage, then tell it to record the
+      // row. That is what removed the old 50 MB ceiling — a real 4K clip is
+      // past that in about fifteen seconds.
+      api({ action: 'sign', mime: file.type, size: file.size })
+        .then(function (d) {
+          return new Promise(function (resolve, reject) {
+            var x = new XMLHttpRequest();
+            x.open('PUT', d.url, true);
+            x.setRequestHeader('Content-Type', file.type);
+            // A percentage, because a 200 MB clip is minutes of nothing
+            // happening and silence looks identical to a crash.
+            x.upload.onprogress = function (ev) {
+              if (ev.lengthComputable) {
+                state.textContent = Math.round(ev.loaded / ev.total * 100) + '%';
+              }
+            };
+            x.onload = function () {
+              (x.status >= 200 && x.status < 300) ? resolve(d.key)
+                                                  : reject(new Error('put ' + x.status));
+            };
+            x.onerror = function () { reject(new Error('network')); };
+            x.send(file);
+          });
         })
+        .then(function (key) {
+          state.textContent = 'saving…';
+          return api({ action: 'confirm', key: key });
+        })
+        // Two-arg `then`, not `.then().catch()`: the failure handler must see
+        // only failures from the upload above it. A `.catch()` here would also
+        // swallow anything thrown by the success handler and run `next()`
+        // twice, which silently skips a file.
+        .then(
+          function () { state.textContent = '✓'; state.className = 'ok'; sent++; },
+          // No automatic retry: on bad signal a silent retry that half-works
+          // is worse than a red line the person can see and tap again. But
+          // "try again" is the wrong advice for a size rejection — the same
+          // file fails the same way forever — so 413 gets its own message.
+          function (err) {
+            state.textContent = err && err.status === 413 ? TOO_BIG : 'failed — try again';
+            state.className = 'bad';
+          },
+        )
         .then(next);
     })();
   });
