@@ -55,9 +55,18 @@
 
   <label class="pick" id="pick" aria-disabled="true">
     <span class="cam">📷</span>
-    <span>Take photos or video</span>
-    <span class="es">Tomar fotos o video</span>
-    <input id="f" type="file" accept="image/*,video/*" multiple capture="environment">
+    <span>Add photos or video</span>
+    <span class="es">Agregar fotos o video</span>
+    <!--
+      NO `capture` ATTRIBUTE, deliberately. `capture="environment"` forces the
+      camera straight open and REMOVES the ability to pick anything already
+      shot — which is most of what actually happens: the crew photographs a
+      wall when the light is right and sends it at lunch, not the instant they
+      take it. Without `capture` the phone shows its own chooser — Photo
+      Library / Take Photo or Video / Choose File — so both paths work from one
+      button. Costs the camera path a single tap; buys the library path at all.
+    -->
+    <input id="f" type="file" accept="image/*,video/*" multiple>
   </label>
 
   <ul id="list"></ul>
