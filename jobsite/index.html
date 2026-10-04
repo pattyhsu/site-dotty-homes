@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Job site photos · Dotty Homes</title>
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Dotty Photos">
+<!--
+  Crew photo upload. One link per build; the deal is identified by the token
+  in the URL, so a photo can never be filed against the wrong house.
+
+  Lives here rather than in the Edge Function because Supabase rewrites any
+  text/html response from a function to text/plain (anti-phishing policy on
+  the shared *.supabase.co origin). Same split as /estimate/ -> lead-intake.
+
+  Bilingual because the crews on these builds speak Spanish, and a page they
+  cannot read is a page they will not use.
+-->
+<style>
+  :root{--ink:#1b1b1b;--mut:#6b6b6b;--line:#e3e0da;--bg:#faf8f5;--acc:#2F7A4D;--err:#AE3B2C}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font:17px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+       padding:26px 18px calc(28px + env(safe-area-inset-bottom))}
+  h1{font-size:21px;margin:0 0 2px;min-height:26px}
+  .sub{color:var(--mut);font-size:14px;margin:0 0 26px}
+  /* One enormous target: gloves, sunlight, one hand. */
+  label.pick{display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:8px;min-height:176px;border:2px dashed var(--line);border-radius:16px;
+    background:#fff;cursor:pointer;font-size:19px;font-weight:600;
+    -webkit-tap-highlight-color:transparent}
+  label.pick:active{background:#f2efe9}
+  label.pick[aria-disabled="true"]{opacity:.45;pointer-events:none}
+  .cam{font-size:40px;line-height:1}
+  .es{font-size:14px;font-weight:400;color:var(--mut)}
+  input[type=file]{display:none}
+  ul{margin:18px 0 0;padding:0;list-style:none}
+  li{display:flex;justify-content:space-between;gap:10px;padding:9px 0;
+     border-bottom:1px solid var(--line);font-size:15px}
+  li span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ok{color:var(--acc);font-weight:600}.bad{color:var(--err);font-weight:600}
+  #done{margin-top:22px;padding:16px;border-radius:14px;background:#E7F2E9;
+        color:#1D4A2F;font-weight:600;display:none}
+  #dead{margin-top:22px;padding:16px;border-radius:14px;background:#F8E7E3;
+        color:#5A241A;display:none}
+  footer{margin-top:32px;color:var(--mut);font-size:12.5px}
+</style>
+</head>
+<body>
+  <h1 id="label">…</h1>
+  <p class="sub">Daily progress photos · Fotos del progreso</p>
+
+  <label class="pick" id="pick" aria-disabled="true">
+    <span class="cam">📷</span>
+    <span>Take or choose photos</span>
+    <span class="es">Tomar o elegir fotos</span>
+    <input id="f" type="file" accept="image/*" multiple capture="environment">
+  </label>
+
+  <ul id="list"></ul>
+  <div id="done">Sent. Thank you. · Enviado. Gracias.</div>
+  <div id="dead"><b>This link is not active.</b><br>Ask the office for a new one.<br>
+                 <span class="es">Pida un enlace nuevo a la oficina.</span></div>
+
+  <footer>Dotty Homes</footer>
+
+<script>
+(function () {
+  var API = 'https://pwrnywsojomrygsiezzi.supabase.co/functions/v1/progress-photo';
+  var T = new URLSearchParams(location.search).get('t') || '';
+  var pick = document.getElementById('pick');
+  var list = document.getElementById('list');
+  var done = document.getElementById('done');
+  var dead = document.getElementById('dead');
+
+  function showDead() {
+    document.getElementById('label').textContent = 'Link not active';
+    pick.style.display = 'none';
+    dead.style.display = 'block';
+  }
+
+  // Resolve the token to a house name first, so the crew can see they are on
+  // the right job before sending anything.
+  if (!T) { showDead(); return; }
+  fetch(API + '?t=' + encodeURIComponent(T))
+    .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
+    .then(function (d) {
+      document.getElementById('label').textContent = d.label;
+      document.title = d.label + ' · Photos';
+      pick.setAttribute('aria-disabled', 'false');
+    })
+    .catch(showDead);
+
+  document.getElementById('f').addEventListener('change', function (e) {
+    var files = [].slice.call(e.target.files);
+    e.target.value = '';                 // allow re-picking the same photo
+    if (!files.length) return;
+    done.style.display = 'none';
+
+    // Sequential on purpose: a phone on site has one slow uplink, and ten
+    // parallel uploads on bad signal all time out together.
+    var i = 0, sent = 0;
+    (function next() {
+      if (i >= files.length) { if (sent) done.style.display = 'block'; return; }
+      var file = files[i++];
+      var li = document.createElement('li');
+      var name = document.createElement('span');
+      var state = document.createElement('span');
+      name.textContent = file.name.slice(0, 26);
+      state.textContent = 'sending…';
+      li.appendChild(name); li.appendChild(state); list.appendChild(li);
+
+      var fd = new FormData();
+      fd.append('photo', file);
+      fetch(API + '?t=' + encodeURIComponent(T), { method: 'POST', body: fd })
+        .then(function (r) { return r.ok ? r.json() : Promise.reject(r); })
+        .then(function () { state.textContent = '✓'; state.className = 'ok'; sent++; })
+        // No automatic retry: on bad signal a silent retry that half-works is
+        // worse than a red line the person can see and tap again.
+        .catch(function () { state.textContent = 'failed — try again'; state.className = 'bad'; })
+        .then(next);
+    })();
+  });
+})();
+</script>
+</body>
+</html>
