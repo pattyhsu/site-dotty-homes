@@ -86,6 +86,89 @@
   var TOO_BIG = 'too long · más corto';
   var T = new URLSearchParams(location.search).get('t') || '';
 
+  // ── Thumbnails ──────────────────────────────────────────────────────────
+  // Made HERE, in the browser, because the bytes no longer pass through our
+  // function — the phone uploads straight to storage, so there is no
+  // server-side moment where the image exists to resize. The phone has it
+  // decoded already, so this is nearly free.
+  //
+  // Originals stay untouched at full resolution (they feed social media). This
+  // only exists so a strip of 78px tiles in the app is not a strip of 3 MB
+  // JPEGs — that is ~14 MB to draw one row on a cellular connection.
+  //
+  // EVERY failure path returns null rather than throwing. A thumbnail is a
+  // nicety; the photo is the point. Old device, a video frame iOS refuses to
+  // paint, a backgrounded tab mid-encode — all of them end as "no thumbnail",
+  // the upload proceeds, and the app falls back to the original.
+  var THUMB_MAX = 480;          // longest edge
+  var THUMB_WAIT = 8000;        // never let a stuck decode hold up an upload
+
+  function canvasThumb(src, w, h) {
+    var s = Math.min(1, THUMB_MAX / Math.max(w, h));
+    var c = document.createElement('canvas');
+    c.width = Math.max(1, Math.round(w * s));
+    c.height = Math.max(1, Math.round(h * s));
+    c.getContext('2d').drawImage(src, 0, 0, c.width, c.height);
+    return new Promise(function (res) {
+      // toBlob is async and can hand back null; treat that as "no thumbnail".
+      c.toBlob(function (b) { res(b || null); }, 'image/jpeg', 0.72);
+    });
+  }
+
+  function makeThumb(file) {
+    return new Promise(function (resolve) {
+      var done = false;
+      function finish(v) { if (!done) { done = true; resolve(v); } }
+      setTimeout(function () { finish(null); }, THUMB_WAIT);
+
+      var url = URL.createObjectURL(file);
+      function cleanup(v) { URL.revokeObjectURL(url); finish(v); }
+
+      try {
+        if (file.type.indexOf('image/') === 0) {
+          var img = new Image();
+          img.onload = function () {
+            canvasThumb(img, img.naturalWidth, img.naturalHeight).then(cleanup, function () { cleanup(null); });
+          };
+          img.onerror = function () { cleanup(null); };
+          img.src = url;
+        } else if (file.type.indexOf('video/') === 0) {
+          // A poster frame. iOS needs muted + playsinline before it will
+          // decode a frame off-screen, and may still decline — hence the
+          // timeout above and the null-safe path everywhere below.
+          var v = document.createElement('video');
+          v.muted = true; v.playsInline = true; v.preload = 'metadata';
+          v.onloadeddata = function () {
+            canvasThumb(v, v.videoWidth, v.videoHeight).then(cleanup, function () { cleanup(null); });
+          };
+          v.onerror = function () { cleanup(null); };
+          v.onloadedmetadata = function () {
+            // A hair in, not frame zero: the first frame of a handheld clip is
+            // often a blur or a lens cap.
+            try { v.currentTime = Math.min(0.6, (v.duration || 1) / 3); } catch (_) {}
+          };
+          v.src = url;
+        } else {
+          cleanup(null);
+        }
+      } catch (_) { cleanup(null); }
+    });
+  }
+
+  function putBlob(url, blob, type, onProgress) {
+    return new Promise(function (resolve, reject) {
+      var x = new XMLHttpRequest();
+      x.open('PUT', url, true);
+      x.setRequestHeader('Content-Type', type);
+      if (onProgress) x.upload.onprogress = onProgress;
+      x.onload = function () {
+        (x.status >= 200 && x.status < 300) ? resolve() : reject(new Error('put ' + x.status));
+      };
+      x.onerror = function () { reject(new Error('network')); };
+      x.send(blob);
+    });
+  }
+
   // Every call to our function is JSON. It only ever signs a URL and records a
   // row — it never carries a file.
   function api(payload) {
@@ -161,30 +244,39 @@
       // one-object URL, PUT straight to storage, then tell it to record the
       // row. That is what removed the old 50 MB ceiling — a real 4K clip is
       // past that in about fifteen seconds.
+      var signed;
       api({ action: 'sign', mime: file.type, size: file.size })
         .then(function (d) {
-          return new Promise(function (resolve, reject) {
-            var x = new XMLHttpRequest();
-            x.open('PUT', d.url, true);
-            x.setRequestHeader('Content-Type', file.type);
-            // A percentage, because a 200 MB clip is minutes of nothing
-            // happening and silence looks identical to a crash.
-            x.upload.onprogress = function (ev) {
-              if (ev.lengthComputable) {
-                state.textContent = Math.round(ev.loaded / ev.total * 100) + '%';
-              }
-            };
-            x.onload = function () {
-              (x.status >= 200 && x.status < 300) ? resolve(d.key)
-                                                  : reject(new Error('put ' + x.status));
-            };
-            x.onerror = function () { reject(new Error('network')); };
-            x.send(file);
+          signed = d;
+          // Thumbnail first, while the file is still warm in memory — but it
+          // is never allowed to fail the upload, so no catch is needed: it
+          // resolves to null on every error path.
+          return makeThumb(file);
+        })
+        .then(function (thumb) {
+          signed.thumb = thumb;
+          // A percentage, because a 200 MB clip is minutes of nothing
+          // happening and silence looks identical to a crash.
+          return putBlob(signed.url, file, file.type, function (ev) {
+            if (ev.lengthComputable) {
+              state.textContent = Math.round(ev.loaded / ev.total * 100) + '%';
+            }
           });
         })
-        .then(function (key) {
+        .then(function () {
           state.textContent = 'saving…';
-          return api({ action: 'confirm', key: key });
+          if (!signed.thumb) return false;
+          // Best effort, and deliberately after the original is safely up: a
+          // failed thumbnail must cost nothing.
+          return putBlob(signed.thumbUrl, signed.thumb, 'image/jpeg')
+            .then(function () { return true; }, function () { return false; });
+        })
+        .then(function (haveThumb) {
+          return api({
+            action: 'confirm',
+            key: signed.key,
+            thumbKey: haveThumb ? signed.thumbKey : undefined,
+          });
         })
         // Two-arg `then`, not `.then().catch()`: the failure handler must see
         // only failures from the upload above it. A `.catch()` here would also
